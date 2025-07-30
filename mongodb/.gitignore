@@ -1,0 +1,52 @@
+# MongoDB Security Configuration
+# DO NOT commit sensitive files to version control
+
+# Environment files with credentials
+mongodb.env
+*.env
+.env
+
+mongodb-keyfile
+
+# Backup files
+mongodb-backups/
+*.tar.gz
+*.backup
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Docker volumes (if using local volumes)
+mongo_data/
+mongo_config/
+
+# SSH keys and sensitive configs
+*.key
+*.pem
+id_rsa*
+id_ed25519*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.old
+*.orig 

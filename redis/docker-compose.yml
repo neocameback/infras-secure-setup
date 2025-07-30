@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis/redis-stack:7.2.0-v18
+    container_name: redis
+    networks:
+      - eragon-infras
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    ports:
+      - "172.16.16.24:6379:6379/tcp"
+      - "172.16.16.24:16379:16379/tcp"
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
+      - redis_data:/data
+      - redis_dump:/var/lib/redis/dump.rdb
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    # command: ["sh", "-c", "envsubst < /usr/local/etc/redis/redis.conf > /tmp/redis.conf && redis-server /tmp/redis.conf"]
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--requirepass", "${REDIS_PASSWORD}"]
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  redis_data:
+    driver: local
+  redis_dump:
+    driver: local
+
+networks:
+  eragon-infras:
+    driver: bridge 
+    enable_ipv6: false 
